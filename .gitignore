@@ -1,0 +1,28 @@
+# --- Security & Credentials ---
+.oci/
+.env
+*.pem
+*.tfvars
+sentinel_key*        # Blocks both the private and public key
+secrets/             # A good place to put things you want to hide
+commands
+node_modules/
+
+# --- Terraform Files ---
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+.terraform.lock.hcl
+
+# --- Python & Flask ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+instance/
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
