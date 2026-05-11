@@ -21,6 +21,7 @@ This project demonstrates mastery in **Native Cloud Platform, Infrastructure-as-
 ---
 
 ## 🏗️ System Architecture
+### The Layers
 ![alt text](docs/System_Architecture.png)
 
 The infrastructure follows a secure, hybrid-cloud architecture designed for high availability and zero-cost scaling:
@@ -28,6 +29,37 @@ The infrastructure follows a secure, hybrid-cloud architecture designed for high
 2.  **Network Layer:** OCI VCN with an Internet Gateway and Stateless Security Lists.
 3.  **Host Layer:** Always-Free OCI Compute (Ubuntu 22.04) running a Systemd-managed Flask daemon.
 4.  **Intelligence Layer:** Google Gemini 3 API with a recursive multi-model fallback chain.
+
+### The System & Request Flow
+![alt text](docs/SSAI_System_Architecture.png)
+
+#### Infrastructure Path
+1. **User** initiates request
+2. **Cloudflare** (CDN/WAF) receives and secures traffic
+3. **OCI VCN** routes internal network traffic
+4. **Ubuntu Instance** hosts the application environment
+5. **Flask App** processes the logic and orchestrates AI calls
+
+#### AI Logic & Fallback Strategy
+Once the Flask App receives the input, it executes the following decision tree:
+
+1. **Primary Attempt**: Call **Gemini 3 Flash**
+   - ✅ **Success**: Return result to User
+   - ❌ **Fail/Timeout**: Proceed to Fallback 1
+
+2. **Fallback 1**: Call **Gemini 2.5 Flash**
+   - ✅ **Success**: Return result to User
+   - ❌ **Fail**: Proceed to Fallback 2
+
+3. **Fallback 2**: Call **Gemini 3.1 Flash Lite**
+   - ✅ **Success**: Return result to User
+   - ❌ **Fail**: Proceed to Final Handling
+
+4. **Final Call & Error Handling**:
+   - Make final call to 1.5 Flash 8B model
+   - If everything fails: handle error
+   - Log error details
+   - Return standardized error message to User
 
 ---
 
@@ -99,35 +131,46 @@ Before diving into the detailed case studies, here is a high-level overview of t
 
 ### 🔄 1. 24x7 Persistence & Production Readiness (Systemd)
 **Challenge:** The application process was tied to the SSH session lifecycle. Closing the terminal or a network timeout resulted in a "Connection Refused" error for users.
+
 **Solution:** Implemented **Systemd Automation**. Created a custom `.service` unit with a `Restart=always` policy to manage the Flask daemon.
+
 **Outcome:** The SentinelScan AI engine is now a persistent background service, ensuring zero downtime even after system crashes or OCI maintenance reboots.
 
 ### 🛡️ 2. The "Double-Lock" Firewall Challenge (Networking Debug)
 **Challenge:** After successful Terraform provisioning, the app was unreachable via the Public IP despite OCI Security Lists being correctly configured for Port 5000.
+
 **Diagnosis:** Identified a conflict with the host-based firewall (`iptables`) on the Ubuntu image, which contained a default `REJECT` rule prioritized over custom traffic.
+
 **Resolution:** Performed a targeted flush and re-sequenced the rule hierarchy to explicitly allow Port 5000 before the global reject policy, persisting rules via `netfilter-persistent`.
 
 ### 🐞 3. The "Jumbled Deployment" Syntax Debug
 **Challenge:** A routine service restart triggered a `SyntaxError`, taking the scanner offline.
+
 **Diagnosis:** Used `journalctl` and `systemctl status` to identify that the deployment process had accidentally concatenated code lines during a manual edit.
+
 **Resolution:** Performed an emergency source flush and re-deployed modular code, reinforcing the importance of using system logs as a "first responder" tool.
 
 ### 🚀 4. Adaptive AI Orchestration: Regional Pivot
 **Challenge:** OCI Mumbai lacked native GenAI support for Free Tier users (Regional Constraint).
+
 **Diagnosis:** Audited the Google AI fleet and discovered legacy SDKs were nearing deprecation.
+
 **Resolution:** Migrated the backend to the **`google-genai` 2026 SDK** and **Gemini 3 Flash**, bypassing "Cloud-Lock" and gaining superior heuristic reasoning.
 
 ### 📉 5. High-Availability: Multi-Model Fallback System
 **Challenge:** Gemini 3 Flash is capped at 20 requests per day on the free tier.
+
 **Resolution:** Engineered a **Recursive Fallback Strategy**:
 1. **Primary:** Gemini 3 Flash (Apex Intelligence)
 2. **Secondary:** Gemini 2.5 Flash (Balanced Backup)
 3. **Tertiary:** Gemini 3.1 Flash Lite (High-Volume / 500 RPD)
 4. **The Backup:** Gemini 1.5 Flash 8B (High-Volume / 1500 RPD)
+
 **Impact:** Increased daily capacity by 2040 total scans while maintaining high-quality analysis.
 
 ### 🌐 6. Edge Networking (Cloudflare & OCI)
 **Challenge:** Accessing the tool via a raw IP and non-standard port was unencrypted and lacked professional branding.
+
 **Resolution:** Integrated **Cloudflare Edge Proxy** and **OCI Financial Governance**.
 * **Subdomain:** Mapped `sentinel.aitoolnetwork.com` to OCI infrastructure for professional branding.
 * **SSL/TLS:** Implemented Flexible SSL for instant HTTPS and user data protection.
@@ -135,33 +178,42 @@ Before diving into the detailed case studies, here is a high-level overview of t
 
 ### 🔑 7. SSL Handshake Resolution (Error 525 Debugging)
 **Challenge:** Upon enabling the Cloudflare Proxy, the application returned a `525 SSL Handshake Failed` error, preventing secure access despite the A-record being active.
+
 **Diagnosis:** Identified that the Cloudflare SSL/TLS setting was defaulting to "Full/Strict" mode, which expects the Origin (OCI Ubuntu) to have a pre-installed CA certificate. Since the Flask application was serving raw HTTP on port 5000, the secure handshake between the Edge and the Origin was failing.
+
 **Resolution:** 
 1.  Performed a **Protocol Downgrade** at the Edge by switching Cloudflare to **Flexible SSL Mode**.
 2.  This allowed Cloudflare to handle the heavy lifting of HTTPS encryption for the end-user, while communicating with the OCI backend via a secure internal tunnel on the application port.
+
 **Impact:** Resolved the 525 error instantly, providing the end-user with a valid SSL Certificate (Green Lock) without requiring manual certificate renewal on the compute instance.
 
 ### 🎨 8. UI and UX: The "Technical-Transparency"
-*   **Objective:** To bridge the gap between complex backend operations and end-user trust, I developed a **Technical-Transparency** loading sequence. 
-*   **Authority:** Uses industry-specific terminology (Heuristics, Metadata Isolation, SSL Chain) to establish the tool's credibility.
-*   **Clarity:** Pairs technical jargon with plain-English descriptors to ensure non-technical users understand the progress of the scan.
-*   **Engagement:** The real-time status updates reduce "perceived latency," making a 10-second AI inference window feel like a high-speed data processing event.
+*   **Challenge:** Found the gap between complex backend operations and end-user trust, I developed a **Technical-Transparency** loading sequence. 
+
+*   **Diagnosis:** Uses industry-specific terminology (Heuristics, Metadata Isolation, SSL Chain) to establish the tool's credibility.
+
+*   **Resolution:** Pairs technical jargon with plain-English descriptors to ensure non-technical users understand the progress of the scan.
 
 ### ⚡ 9. Performance & Latency Optimization: From 15s to 3s Inference
 **Challenge:** Initial testing showed a significant "First-Run" delay (10-15s) and inconsistent response times during high-traffic windows.
+
 **Solution:** 
 1.  **Engine Warm-up:** Developed a `warmup_engines()` routine that triggers a non-blocking API handshake during the service boot sequence, eliminating "Cold Start" lag.
 2.  **Model Tiering:** Strategically integrated **Gemini 1.5 Flash-8B** into the fallback fleet. This model's lower parameter count allows for high-speed security inference without sacrificing report quality.
 3.  **Connection Pooling:** Optimized the Python client-server handshake by maintaining active connections to the Google GenAI backend.
+
 **Impact:** Reduced end-to-end scan latency by **75%**, moving the user experience from "sluggish" to "near-instantaneous."
 
 ### 💰 10. FinOps & Cloud Governance: Zero-Cost Resource Management
 **Challenge:** Cloud environments can incur unexpected costs due to over-provisioning or API usage spikes beyond the "Always Free" tier.
+
 **Solution:** 
 1.  **Budget Thresholding:** Established a hard OCI Budget Alert at a **$1.00 threshold**, configured to trigger an automated email notification the moment forecasted spending exceeds $0.00.
 2.  **Resource Right-Sizing:** Specifically selected ARM-based A1.Flex compute shapes and specific block storage volumes to remain strictly within the OCI "Always Free" eligibility window.
 3.  **API Rate-Limiting Strategy:** Engineered the 4-tier model fallback system not just for uptime, but to prioritize the highest-performing "Free Tier" API quotas when the primary tokens were exhausted.
+
 **Impact:** Maintained a 100% production uptime with **$0.00 infrastructure overhead**, demonstrating the ability to deploy enterprise-grade tools with strict financial governance.
+
 ---
 
 ## ⚙️ Installation & Usage
