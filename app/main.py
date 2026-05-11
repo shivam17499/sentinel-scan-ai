@@ -28,8 +28,9 @@ def analyze():
     # Order of models: [Smartest (Low Limit) -> Smart (Medium) -> Efficient (High Limit)]
     models_to_try = [
         "gemini-3-flash-preview",     # The Apex model (20 RPD)
-        "gemini-2.5-flash",           # The Ultra-stable backup (20 RPD)
+        "gemini-2.5-flash",           # The Ultra-stable (20 RPD)
         "gemini-3.1-flash-lite-preview" # The Workhorse (500 RPD)
+        "gemini-1.5-flash-8b",           # The Ultimate backup (1500 RPD)
     ]
 
     ai_output = ""
