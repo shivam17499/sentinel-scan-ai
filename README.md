@@ -45,7 +45,7 @@ The infrastructure follows a secure, hybrid-cloud architecture designed for high
 
 ### ✅ Phase 3: Performance Engineering & Resilience
 *   **Latency Mitigation:** Achieved a **75% reduction in response time** (from 15s down to 3s) by implementing an asynchronous AI "Warm-up" routine during service boot.
-*   **Multi-Model Fallback:** Engineered a recursive 4-tier failover system utilizing `Gemini 3 Flash`, `3.1 Lite`, and `1.5 Flash-8B` to bypass API rate limits and ensure 100% service uptime.
+*   **Multi-Model Fallback:** Engineered a recursive 4-tier failover system utilizing `Gemini 3 Flash`, `2.5 Flash`, `3.1 Flash Lite`, and `1.5 Flash-8B` to bypass API rate limits and ensure 100% service uptime.
 *   **Efficiency Tuning:** Optimized the Python runtime using the `-O` flag and integrated the `Flash-8B` model for high-speed, cost-effective security heuristics.
 
 ### ✅ Phase 4: Production Hardening & Global Delivery
@@ -123,7 +123,8 @@ Before diving into the detailed case studies, here is a high-level overview of t
 1. **Primary:** Gemini 3 Flash (Apex Intelligence)
 2. **Secondary:** Gemini 2.5 Flash (Balanced Backup)
 3. **Tertiary:** Gemini 3.1 Flash Lite (High-Volume / 500 RPD)
-**Impact:** Increased daily capacity by **2700%** (540 total scans) while maintaining high-quality analysis.
+4. **The Backup:** Gemini 1.5 Flash 8B (High-Volume / 1500 RPD)
+**Impact:** Increased daily capacity by 2040 total scans while maintaining high-quality analysis.
 
 ### 🌐 6. Edge Networking (Cloudflare & OCI)
 **Challenge:** Accessing the tool via a raw IP and non-standard port was unencrypted and lacked professional branding.
@@ -159,7 +160,7 @@ Before diving into the detailed case studies, here is a high-level overview of t
 **Solution:** 
 1.  **Budget Thresholding:** Established a hard OCI Budget Alert at a **$1.00 threshold**, configured to trigger an automated email notification the moment forecasted spending exceeds $0.00.
 2.  **Resource Right-Sizing:** Specifically selected ARM-based A1.Flex compute shapes and specific block storage volumes to remain strictly within the OCI "Always Free" eligibility window.
-3.  **API Rate-Limiting Strategy:** Engineered the 4-tier model fallback system not just for uptime, but to prioritize the highest-performing "Free Tier" API quotas (Gemini 3.1 Lite) when the primary tokens were exhausted.
+3.  **API Rate-Limiting Strategy:** Engineered the 4-tier model fallback system not just for uptime, but to prioritize the highest-performing "Free Tier" API quotas when the primary tokens were exhausted.
 **Impact:** Maintained a 100% production uptime with **$0.00 infrastructure overhead**, demonstrating the ability to deploy enterprise-grade tools with strict financial governance.
 ---
 
