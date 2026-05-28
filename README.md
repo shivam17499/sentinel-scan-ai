@@ -219,30 +219,51 @@ Before diving into the detailed case studies, here is a high-level overview of t
 ## ⚙️ Installation & Usage
 
 ### 1. Prerequisites
-*   Terraform v1.5+ installed.
-*   Python 3.10+ with Flask and `google-genai` SDK.
-*   OCI Credentials (config, api_key).
+* **Terraform v1.5+** installed locally.
+* **Python 3.10+** installed on the host/target environment.
+* An active **Groq API Key** (and/or alternative Google Gemini API Key).
+* **Oracle Cloud Infrastructure (OCI)** Credentials (`config`, private API key file).
 
-### 2. Deployment
+### 2. Infrastructure Deployment (Local Machine)
 ```bash
 # Clone the repository
 git clone <github-repo-link-here>
+cd SentinelScan
 
 # Navigate to the terraform directory
 cd terraform
 
-# Initialize and  deploy infrastructure
+# Initialize and deploy cloud infrastructure
 terraform init
 terraform validate
 terraform plan
-terraform apply -auto-
-
-# After infra is up, SSH into your instance and run:
-cd /path/to/app
-pip install -r requirements.txt
-python3 -O main.py
+terraform apply -auto-approve
 ```
 ---
-### 3. ⚖️ License & Ownership
+### 3. Application Setup & Isolation (On the Compute Server)
+```bash
+# Navigate to the application project directory
+cd /home/ubuntu/SentinelScan
+
+# Initialize the isolated Virtual Environment
+python3 -m venv venv
+
+# Activate the virtual environment
+source venv/bin/activate
+
+# Upgrade pip and install required multi-model dependencies
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# Configure your secure environment secrets
+cat << EOF > .env
+GENAI_API_KEY="your_actual_gemini_api_key_here"
+EOF
+
+# Run the backend orchestrator application
+python3 main.py
+```
+---
+### 4. ⚖️ License & Ownership
 **SentinelScan AI** is designed, developed, and maintained by **Shivam Ugale**. 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
