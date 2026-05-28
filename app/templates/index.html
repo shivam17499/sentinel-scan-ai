@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         
         /* Flexbox fix: Ensure vertical stacking and full height */
         body { 
@@ -27,27 +27,69 @@
             align-items: center;
             justify-content: center;
             width: 100%;
+            padding: 40px 0;
         }
 
         .hero-card {
-            background: rgba(30, 41, 59, 0.7); 
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1); 
+            background: rgba(30, 41, 59, 0.45); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
             border-radius: 24px;
             padding: 50px; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
         }
 
+        /* --- Custom Dropdown Engine Selector Box --- */
+        .select-wrapper {
+            text-align: left;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 16px 20px;
+            transition: 0.3s ease-in-out;
+        }
+        .select-wrapper:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+        .form-label-custom {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-select-custom {
+            background-color: transparent !important;
+            border: none !important;
+            color: #ffffff !important;
+            font-size: 1.05rem;
+            font-weight: 500;
+            padding: 0;
+            cursor: pointer;
+            box-shadow: none !important;
+        }
+        /* Custom styling for the dropdown internal options */
+        .form-select-custom option {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 12px;
+        }
+
+        /* --- Custom Input Scanner Box --- */
         .input-group-custom {
             background: rgba(15, 23, 42, 0.6); 
             border: 1px solid #334155;
-            border-radius: 12px; 
-            padding: 10px; 
-            transition: 0.3s;
+            border-radius: 14px; 
+            padding: 8px; 
+            transition: 0.3s ease-in-out;
         }
         .input-group-custom:focus-within { 
             border-color: #3b82f6; 
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); 
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); 
         }
 
         .form-control-custom {
@@ -55,6 +97,7 @@
             border: none; 
             color: white; 
             font-size: 1.1rem;
+            padding-left: 15px;
         }
         .form-control-custom:focus { 
             background: transparent; 
@@ -65,16 +108,20 @@
         .btn-scan {
             background: #3b82f6; 
             border: none; 
-            border-radius: 8px;
-            padding: 12px 30px; 
+            border-radius: 10px;
+            padding: 12px 35px; 
             font-weight: 700; 
             letter-spacing: 0.5px;
+            transition: background 0.2s;
+        }
+        .btn-scan:hover {
+            background: #2563eb;
         }
 
         /* --- LOADING OVERLAY --- */
         #loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.95); 
+            background: rgba(15, 23, 42, 0.96); 
             display: none;
             z-index: 9999; 
             flex-direction: column; 
@@ -88,52 +135,65 @@
             border-radius: 50%; 
             border-top-color: transparent;
             animation: spin 1s linear infinite; 
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-text { font-size: 1.2rem; font-weight: 500; color: #3b82f6; }
+        .loading-text { font-size: 1.25rem; font-weight: 600; color: #3b82f6; letter-spacing: 0.5px; }
 
         /* Footer styling */
         footer {
-            background: rgba(15, 23, 42, 0.4); 
+            background: rgba(15, 23, 42, 0.5); 
             backdrop-filter: blur(5px); 
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid rgba(255,255,255,0.04);
         }
     </style>
 </head>
 <body>
 
-    <!-- Loading Overlay -->
     <div id="loading-overlay">
         <div class="radar"></div>
         <div class="loading-text" id="status-text">Initializing AI Scan...</div>
-        <div class="text-secondary small mt-2">Checking URL against Gemini 3 Threat Database</div>
+        <div class="text-secondary small mt-2"><i class="bi bi-cpu-fill me-1 text-primary"></i> Multi-Cloud LLM Threat Evaluation Node Active</div>
     </div>
 
-    <!-- Main Content Wrapper -->
     <div class="main-wrapper">
         <div class="container">
             <div class="row justify-content-center text-center">
                 <div class="col-lg-7">
                     <div class="hero-card">
+                        
                         <div class="mb-4">
                             <i class="bi bi-shield-shaded text-primary display-3"></i>
                         </div>
                         <h1 class="fw-bold mb-3">SentinelScan <span class="text-primary">AI</span></h1>
-                        <p class="text-secondary mb-5 fs-5">Advanced Heuristic URL Analysis powered by Gemini 3. Identify phishing, malware, and spoofing in real-time.</p>
+                        <p class="text-secondary mb-5 fs-5">Advanced Heuristic URL Analysis powered by Google & Groq LLM Architectures. Identify phishing, malware, and spoofing vectors in real-time.</p>
 
                         <form action="/analyze" method="POST" onsubmit="showLoading()">
-                            <div class="input-group-custom d-flex">
-                                <input type="text" name="url" class="form-control form-control-custom" placeholder="https://example-site.com" required>
+                            
+                            <div class="select-wrapper mb-4">
+                                <label for="provider_select" class="form-label-custom"><i class="bi bi-cpu text-primary me-1"></i> Analysis Engine Target Selection</label>
+                                <select class="form-select form-select-custom" id="provider_select" name="provider_tier">
+                                    <option value="gemini" selected>Google Gemini Cluster (Comprehensive Reasoning)</option>
+                                    <option value="groq-70b">Groq Llama 3.3 70B (High-Speed Deep Context Inference)</option>
+                                    <option value="groq-8b">Groq Llama 3.1 8B (Sub-Second Reactive Execution)</option>
+                                </select>
+                            </div>  
+                            
+                            <div class="input-group-custom d-flex mb-2">
+                                <input type="text" name="url" class="form-control form-control-custom" placeholder="Enter endpoint URL to scan (e.g., security-test.com)" required>
                                 <button type="submit" class="btn btn-scan text-white">SCAN NOW</button>
+                            </div>
+                            
+                            <div class="text-start px-2 mb-4">
+                                <small class="form-text text-muted small"><i class="bi bi-info-circle me-1"></i> If selected cluster node is at capacity, architecture triggers our automated high-availability routing array.</small>
                             </div>
                         </form>
 
-                        <div class="mt-4 d-flex justify-content-center gap-4 text-secondary small">
-                            <span><i class="bi bi-check2-circle text-success me-1"></i> Gemini 3 Flash</span>
-                            <span><i class="bi bi-check2-circle text-success me-1"></i> Oracle Cloud Infrastructure</span>
-                            <span><i class="bi bi-check2-circle text-success me-1"></i> Zero-Day Detection</span>
+                        <div class="mt-5 d-flex justify-content-center gap-4 text-secondary small flex-wrap">
+                            <span><i class="bi bi-check2-circle text-success me-1"></i> Multi-Model Fleet</span>
+                            <span><i class="bi bi-check2-circle text-success me-1"></i> Oracle Cloud Compute</span>
+                            <span><i class="bi bi-check2-circle text-success me-1"></i> Zero-Day Isolation</span>
                         </div>
                     </div>
                 </div>
@@ -141,7 +201,6 @@
         </div>
     </div>
 
-    <!-- Professional Footer -->
     <footer class="py-4 text-center">
         <div class="container">
             <p class="mb-1 text-secondary small">
@@ -157,14 +216,14 @@
         function showLoading() {
             document.getElementById('loading-overlay').style.display = 'flex';
             const texts = [
-    "INTERCEPTING DOMAIN: Establishing secure handshake...",
-    "ISOLATING METADATA: Analyzing registrar credentials...",
-    "HEURISTIC ENGINE: Scanning for typosquatting vectors...",
-    "SSL INSPECTION: Verifying certificate chain integrity...",
-    "THREAT DATABASE: Cross-referencing known blacklists...",
-    "AI NEURAL ANALYSIS: Querying Gemini-Flash intelligence...",
-    "BEHAVIORAL CHECK: Analyzing domain redirection patterns...",
-    "COMPILING REPORT: Finalizing security risk assessment..."
+                "INTERCEPTING DOMAIN: Establishing secure handshake...",
+                "ISOLATING METADATA: Analyzing registrar credentials...",
+                "HEURISTIC ENGINE: Scanning for typosquatting vectors...",
+                "SSL INSPECTION: Verifying certificate chain integrity...",
+                "THREAT DATABASE: Cross-referencing known blacklists...",
+                "AI NEURAL ANALYSIS: Querying prioritized cluster intelligence...",
+                "BEHAVIORAL CHECK: Analyzing domain redirection patterns...",
+                "COMPILING REPORT: Finalizing security risk assessment..."
             ];
             let i = 0;
             const statusBox = document.getElementById('status-text');
