@@ -221,7 +221,7 @@ Before diving into the detailed case studies, here is a high-level overview of t
 ### 1. Prerequisites
 * **Terraform v1.5+** installed locally.
 * **Python 3.10+** installed on the host/target environment.
-* An active **Groq API Key** (and/or alternative Google Gemini API Key).
+* An active **GenAI API Keys** (and respective AI sdk).
 * **Oracle Cloud Infrastructure (OCI)** Credentials (`config`, private API key file).
 
 ### 2. Infrastructure Deployment (Local Machine)
