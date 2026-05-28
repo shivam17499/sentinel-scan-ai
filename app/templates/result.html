@@ -8,15 +8,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         body { background-color: #f0f2f5; color: #1a1f36; font-family: 'Segoe UI', system-ui, sans-serif; }
+        
         .audit-card {
             background: white; border: none; border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin-top: 50px; overflow: hidden;
         }
+        
         .audit-header { background: #1a1f36; color: white; padding: 30px; }
+        
         .url-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; font-family: monospace; }
         
         /* Analysis Section Styling */
-        .report-content { padding: 40px; }
+        .main-padding-box { padding: 40px; }
+        
         .section-title { 
             font-weight: 700; color: #4a5568; text-transform: uppercase; 
             letter-spacing: 0.5px; font-size: 0.9rem; margin-bottom: 15px;
@@ -24,10 +28,27 @@
         }
         .section-title i { margin-right: 10px; color: #0d6efd; }
 
-        .report-text {
-            white-space: pre-wrap; line-height: 1.8; color: #2d3748;
-            background: #fff; padding: 10px 0; font-size: 1.05rem;
+        /* Elegant Deep Dark Box for AI Data Output */
+        .analysis-box {
+            background: #111424 !important;
+            border-left: 5px solid #ff4d4d;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
         }
+
+        .report-dynamic-content {
+            white-space: pre-line; /* Keeps your HTML <br> line breaks perfectly clean */
+            line-height: 1.9;
+            font-size: 1.1rem;
+            color: #e2e8f0;
+        }
+        
+        /* Captures the RISK_SCORE line automatically and expands it */
+        .report-dynamic-content:first-line {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #ff4d4d; /* Crimson Alert Color */
+            letter-spacing: 0.5px;
+        }        
         
         .footer-brand { border-top: 1px solid #edf2f7; padding: 20px; text-align: center; background: #f8fafc; }
     </style>
@@ -38,29 +59,27 @@
             <div class="col-lg-8">
                 <div class="audit-card">
                     
-                    <!-- Header -->
                     <div class="audit-header d-flex justify-content-between align-items-center">
                         <div>
                             <h4 class="mb-1"><i class="bi bi-shield-lock-fill me-2"></i>SentinelScan Security Audit</h4>
-                            <p class="mb-0 opacity-75 small">Engine: {{ result.risk_score }}</p>
+                            <p class="mb-0 opacity-75 small">Active Provider: {{ result.risk_score }}</p>
                         </div>
-                        <span class="badge bg-info text-dark fw-bold">LIVE REPORT</span>
+                        <span class="badge bg-danger fw-bold">LIVE REPORT</span>
                     </div>
 
-                    <div class="report-content">
-                        <!-- Analysis Target -->
-                        <div class="mb-5">
+                    <div class="main-padding-box">
+                        <div class="mb-4">
                             <div class="section-title"><i class="bi bi-geo-alt"></i>Analysis Target</div>
                             <div class="url-box text-primary h5 mb-0">{{ result.url }}</div>
                         </div>
 
-                        <!-- Technical Details -->
-                        <div class="mb-4">
-                            <div class="section-title"><i class="bi bi-activity"></i>Technical Assessment & Findings</div>
-                            <div class="report-text">{{ result.details }}</div>
+                        <div class="section-title mt-4"><i class="bi bi-cpu"></i>AI Fleet Intelligence Report</div>
+                        <div class="analysis-box p-4 text-white rounded">
+                            <div class="report-dynamic-content">
+                                {{ result.details | safe }}
+                            </div>
                         </div>
 
-                        <!-- Action Button -->
                         <div class="text-center mt-5">
                             <a href="/" class="btn btn-dark btn-lg px-5 rounded-pill shadow">
                                 <i class="bi bi-arrow-repeat me-2"></i>New Security Scan
@@ -68,9 +87,8 @@
                         </div>
                     </div>
 
-                    <!-- Copyright info -->
-<div class="footer-brand">
-                        <small class="text-muted">© 2026 SentinelScan AI | Shivam Ugale</small>
+                    <div class="footer-brand">
+                        <small class="text-muted">© 2026 SentinelScan AI | Built by Shivam Ugale</small>
                     </div>
                 </div>
             </div>
