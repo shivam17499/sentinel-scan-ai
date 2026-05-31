@@ -23,7 +23,7 @@ This project demonstrates mastery in **Native Cloud Platform, Infrastructure-as-
 
 ## 🏗️ System Architecture
 ### The Layers
-![alt text](docs/System_Architecture.png)
+![alt text](docs/The_Layers.png)
 
 The infrastructure follows a secure, hybrid-cloud architecture designed for high availability and zero-cost scaling:
 1.  **Edge Layer:** Cloudflare Proxy handling SSL (HTTPS) and initial firewall security.
