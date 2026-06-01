@@ -33,7 +33,7 @@ The infrastructure follows a secure, hybrid-cloud architecture designed for high
 5.  **Intelligence Layer:** A hybrid AI fleet (Google Gemini & Groq Llama 3) with a recursive failover chain.
 
 ### The System & Request Flow
-![alt text](docs/SSAI_System_Architecture.png)
+![alt text](docs/SystemArchitecture.png)
 
 #### Infrastructure Path
 1. **User** initiates request via UI.
