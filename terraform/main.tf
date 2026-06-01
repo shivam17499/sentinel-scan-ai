@@ -98,8 +98,17 @@ resource "oci_core_security_list" "sentinel_security_list" {
     protocol = "6"
     source   = "0.0.0.0/0"
     tcp_options {
-      min = 5000
-      max = 5000
+      min = 80
+      max = 80
+    }
+  }
+  
+  ingress_security_rules {
+    protocol = "6"
+    source   = "0.0.0.0/0"
+    tcp_options {
+      min = 443
+      max = 443
     }
   }
   
