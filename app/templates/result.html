@@ -50,6 +50,21 @@
             letter-spacing: 0.5px;
         }        
         
+        /* --- Developer Terminal Console Log Styles --- */
+        .console-box {
+            background: #090d16;
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            font-size: 0.9rem;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+        }
+        .log-line { margin-bottom: 8px; line-height: 1.4; }
+        .log-attempt { color: #38bdf8; }
+        .log-success { color: #4ade80; font-weight: bold; }
+        .log-fail { color: #fb7185; font-weight: bold; }
+        
         .footer-brand { border-top: 1px solid #edf2f7; padding: 20px; text-align: center; background: #f8fafc; }
     </style>
 </head>
@@ -78,6 +93,16 @@
                             <div class="report-dynamic-content">
                                 {{ result.details | safe }}
                             </div>
+                        </div>
+
+                        <!-- Dynamic Fault Tolerance Logging Console Module -->
+                        <div class="section-title mt-5 text-secondary"><i class="bi bi-terminal-fill"></i> Architectural Resilience Audit Trail</div>
+                        <div class="console-box">
+                            {% for log in result.logs %}
+                                <div class="log-line {% if log.status == 'attempt' %}log-attempt{% elif log.status == 'success' %}log-success{% else %}log-fail{% endif %}">
+                                    {{ log.text }}
+                                </div>
+                            {% endfor %}
                         </div>
 
                         <div class="text-center mt-5">
