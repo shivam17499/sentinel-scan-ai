@@ -1,5 +1,5 @@
 # 🛡️ SentinelScan AI
-**A Cloud-Native URL Security Analyzer powered by Multi-Cloud Generative AI**
+**A Cloud-Native URL Security Analyzer powered by Multi-Cloud LLM/ Generative AI**
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Online-brightgreen?style=for-the-badge&logo=google-cloud)](https://sentinel.aitoolnetwork.com/)
 ------
@@ -16,7 +16,7 @@ This project demonstrates mastery in **Native Cloud Platform, Infrastructure-as-
 | **Automation & IaC** | Terraform | Automated provisioning of 6/6 cloud resources in <70s. |
 | **Edge & Web Routing** | Cloudflare & Nginx | CDN acceleration, SSL termination, and Enterprise Reverse Proxy. |
 | **Backend API** | Python / Flask | RESTful API for URL submission and asynchronous AI routing. |
-| **AI Orchestration** | Gemini / Groq (Llama 3) | Multi-cloud fallback system ensuring 100% heuristic uptime. |
+| **AI Orchestration** | Gemini / Groq (Llama 3) | Multi-LLM fallback system ensuring 100% heuristic uptime. |
 | **DevOps & Security** | Systemd / `.env` | 24/7 background persistence, auto-recovery, and memory-isolated API secrets. |
 
 ---
@@ -40,7 +40,7 @@ The infrastructure follows a secure, hybrid-cloud architecture designed for high
 2. **Cloudflare** (CDN/WAF) receives and secures traffic.
 3. **Nginx** (Ubuntu Host) catches web traffic on Port 80.
 4. **Flask App** receives the proxy-passed request on Port 5000.
-5. **Multi-Cloud Engine** processes logic and orchestrates AI API calls.
+5. **Multi-Cloud LLM Engine** processes logic and orchestrates AI API calls.
 
 #### AI Logic & High-Availability Fallback Strategy
 The backend operates as a Model-as-a-Service (MaaS) router. When the user selects their preferred AI engine, the app executes the following decision tree:
@@ -62,7 +62,7 @@ The backend operates as a Model-as-a-Service (MaaS) router. When the user select
 
 ### ✅ Phase 2: Application Logic & AI Integration
 * **Backend:** Developed a Python/Flask engine focused on secure URL processing and string sanitization.
-* **Multi-Cloud Pivot:** Successfully integrated both `google-genai` and `groq` SDKs to leverage a diverse intelligence pool, escaping vendor lock-in.
+* **Multi-Cloud LLM Pivot:** Successfully integrated both `google-genai` and `groq` SDKs to leverage a diverse intelligence pool, escaping vendor lock-in.
 
 ### ✅ Phase 3: Production Hardening & Reverse Proxy Setup
 * **Enterprise Routing:** Deployed **Nginx** as a reverse proxy to safely decouple public-facing HTTP traffic from the isolated internal Flask daemon.
